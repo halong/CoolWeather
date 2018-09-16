@@ -7,7 +7,10 @@ import com.example.halong.myapplication.bean.Province;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -24,4 +27,7 @@ public interface WeatherService {    //interface must be public
 
     @GET("china/{city}/{county}")
     Call<List<County>> getCounties(@Path("city") int city, @Path("county") int county);
+
+    @GET("bing_pic")
+    Call<ResponseBody> getBingPic();
 }

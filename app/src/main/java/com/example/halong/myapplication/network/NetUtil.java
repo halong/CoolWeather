@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * eg:http://guolin.tech/api/weather/register   key=7bb09ce0d85147c1b06df360258eacd7
  * eg:http://guolin.tech/api/weather?cityid=CN101190401&key=7bb09ce0d85147c1b06df360258eacd7
  */
-public class RetrofitUtil {
+public class NetUtil {
     private static Retrofit.Builder mRetrofitBuilder;
     private static Retrofit WeatherRetrofit;
     private static WeatherService WeatherService;
@@ -16,7 +16,7 @@ public class RetrofitUtil {
     private static final String WeatherBaseUrl = "http://guolin.tech/api/";
     public static final String Key="7bb09ce0d85147c1b06df360258eacd7";
 
-    private RetrofitUtil() {
+    private NetUtil() {
     }
 
     private static Retrofit.Builder getRetrofitBuilder() {
