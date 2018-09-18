@@ -6,10 +6,6 @@ import java.util.concurrent.Executors;
 
 public class ThreadUtil {
     private static ExecutorService mExecutorService;
-
-    private ThreadUtil() {
-    }
-
     public static ExecutorService getExecutorService() {
         if (mExecutorService == null) {
             mExecutorService = Executors.newCachedThreadPool();

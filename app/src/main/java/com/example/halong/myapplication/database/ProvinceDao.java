@@ -13,5 +13,5 @@ public interface ProvinceDao extends BaseDao<Province> {
     List<Province> getAll();
 
     @Query("select * from provinces where id = :id")
-    Province getProvinceById(int id);
+    Province get(int id);
 }

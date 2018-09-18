@@ -9,7 +9,7 @@ import android.arch.persistence.room.Update;
 
 @Dao
 public interface BaseDao<T> {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)  //对于id重复的item，后者replace前者
     void addItem(T... items);
 
     @Delete

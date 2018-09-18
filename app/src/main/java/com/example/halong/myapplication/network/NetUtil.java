@@ -19,6 +19,7 @@ public class NetUtil {
     private NetUtil() {
     }
 
+    //获取公共Builder
     private static Retrofit.Builder getRetrofitBuilder() {
         if (mRetrofitBuilder == null) {
             mRetrofitBuilder = new Retrofit.Builder()
@@ -27,6 +28,7 @@ public class NetUtil {
         return mRetrofitBuilder;
     }
 
+    //由公共Builder生成WeatherRetrofit
     private static Retrofit getWeatherRetrofit() {
         if (WeatherRetrofit == null) {
             WeatherRetrofit = getRetrofitBuilder()

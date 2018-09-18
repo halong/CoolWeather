@@ -13,5 +13,5 @@ public interface CountyDao extends BaseDao<County> {
     List<County> getAll();
 
     @Query("select * from counties where id = :id")
-    County getCountyById(int id);
+    County get(int id);
 }

@@ -13,5 +13,5 @@ public interface CityDao extends BaseDao<City> {
     List<City> getAll();
 
     @Query("select * from cities where id = :id")
-    City getCityById(int id);
+    City get(int id);
 }
