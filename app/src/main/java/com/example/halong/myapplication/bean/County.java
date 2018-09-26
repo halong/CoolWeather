@@ -39,4 +39,9 @@ public class County {
     public void setWeather_id(String weather_id) {
         this.weather_id = weather_id;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

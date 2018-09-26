@@ -8,14 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyApplication extends Application {
-    private static final List<Activity> activityList = new ArrayList<>();
-    private static MyApplication mApplication;
+    private static List<Activity> activityList = new ArrayList<>();
+
 
     @Override
     public void onCreate() {
         super.onCreate();
-
-        mApplication=this;
         registerActivityLifecycle();
     }
 
@@ -58,7 +56,7 @@ public class MyApplication extends Application {
         });
     }
 
-    public static void exitApp() {
+    public static void exit() {
         if (activityList != null && activityList.size() > 0) {
             for (Activity activity :
                     activityList) {
@@ -67,7 +65,4 @@ public class MyApplication extends Application {
         }
     }
 
-    public static MyApplication getApplication() {
-        return mApplication;
-    }
 }
