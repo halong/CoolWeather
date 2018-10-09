@@ -13,7 +13,7 @@ import com.example.halong.myapplication.bean.Province;
 @Database(entities = {City.class, County.class, Province.class}, version = 1, exportSchema = false)
 public abstract class MyDataBase extends RoomDatabase {
     private static volatile MyDataBase Instance;
-    private static final String DatabaseName = "mydatabase";
+    private static final String DatabaseName = "mydatabase.db";
 
     public static MyDataBase getInstance(Context context) {
         if (Instance == null) {

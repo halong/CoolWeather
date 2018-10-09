@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.ChooseProvinceActivity">
-
+    tools:context=".activity.ChooseCityActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -17,10 +16,10 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
         <TextView
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="中国"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
 

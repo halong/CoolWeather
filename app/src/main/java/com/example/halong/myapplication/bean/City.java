@@ -3,8 +3,9 @@ package com.example.halong.myapplication.bean;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+
 @Entity(tableName = "cities")
-public class City {
+public class City  {
     /**
      * id : 251
      * name : 昆明

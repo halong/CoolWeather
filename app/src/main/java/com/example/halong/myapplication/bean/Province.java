@@ -3,6 +3,7 @@ package com.example.halong.myapplication.bean;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+
 @Entity(tableName = "provinces")
 public class Province {
     /**
