@@ -1,4 +1,4 @@
-package com.example.halong.myapplication.activity;
+package com.example.halong.myapplication.activity.choose;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -7,48 +7,57 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.halong.myapplication.R;
 import com.example.halong.myapplication.adapter.MyAdapter;
-import com.example.halong.myapplication.bean.Province;
+import com.example.halong.myapplication.bean.City;
 import com.example.halong.myapplication.utils.WindowUtil;
-import com.example.halong.myapplication.viewmodel.MyViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
-public class ChooseProvinceActivity extends AppCompatActivity {
-    private MyViewModel mViewModel;
 
+public class ChooseCityActivity extends AppCompatActivity {
+
+    private ChooseViewModel chooseViewModel;
     private ListView mList;
-    private List<Province> mProvinces;
-    private ListAdapter adapter;
+    private List<City> mCities;
+    private MyAdapter myAdapter;
 
+    private TextView mTitle;
     private Toolbar mToolbar;
+
+    private int provinceId;
+    private String provinceName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         WindowUtil.setStatusBarTransparent(this);
-        setContentView(R.layout.activity_choose);
+        setContentView(R.layout.activity_choose_city);
 
-        initView();
         initData();
+        initView();
+
+
     }
 
     private void initData() {
-        mViewModel = ViewModelProviders.of(this).get(MyViewModel.class);
-        mViewModel.requestProvinceData();
-        mViewModel.getProvinceData().observe(this, new Observer<List<Province>>() {
+        provinceId = getIntent().getIntExtra("province_id", 0);
+        provinceName = getIntent().getStringExtra("province_name");
+
+        chooseViewModel = ViewModelProviders.of(this).get(ChooseViewModel.class);
+
+        chooseViewModel.getCityData(provinceId).observe(this, new Observer<List<City>>() {
             @Override
-            public void onChanged(@Nullable List<Province> provinces) {
-                mProvinces=provinces;
-                adapter = new MyAdapter<Province>(provinces);
-                mList.setAdapter(adapter);
+            public void onChanged(@Nullable List<City> cities) {
+                if (cities == null || cities.size() < 1)
+                    chooseViewModel.requestCityData(provinceId);
+                mCities = cities;
+                myAdapter = new MyAdapter(mCities);
+                mList.setAdapter(myAdapter);
             }
         });
 
@@ -59,13 +68,16 @@ public class ChooseProvinceActivity extends AppCompatActivity {
         mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent=new Intent(ChooseProvinceActivity.this,ChooseCityActivity.class);
-                intent.putExtra("province_id",mProvinces.get(position).getId());
-                intent.putExtra("province_name",mProvinces.get(position).getName());
+                Intent intent = new Intent(ChooseCityActivity.this, ChooseCountyActivity.class);
+                intent.putExtra("province_id", provinceId);
+                intent.putExtra("city_id", mCities.get(position).getId());
+                intent.putExtra("city_name", mCities.get(position).getName());
                 startActivity(intent);
-
             }
         });
+
+        mTitle = (TextView) findViewById(R.id.title);
+        mTitle.setText(provinceName);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mToolbar.setNavigationIcon(R.drawable.back);

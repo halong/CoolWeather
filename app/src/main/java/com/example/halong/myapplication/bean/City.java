@@ -5,7 +5,7 @@ import android.arch.persistence.room.PrimaryKey;
 
 
 @Entity(tableName = "cities")
-public class City  {
+public class City {
     /**
      * id : 251
      * name : 昆明
@@ -13,6 +13,7 @@ public class City  {
     @PrimaryKey
     private int id;
     private String name;
+    private int provinceId;
 
     public int getId() {
         return id;
@@ -28,6 +29,14 @@ public class City  {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(int provinceId) {
+        this.provinceId = provinceId;
     }
 
     @Override

@@ -1,9 +1,10 @@
-package com.example.halong.myapplication.activity;
+package com.example.halong.myapplication.activity.choose;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,49 +14,51 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.halong.myapplication.R;
+import com.example.halong.myapplication.activity.main.MainActivity;
 import com.example.halong.myapplication.adapter.MyAdapter;
-import com.example.halong.myapplication.bean.City;
+import com.example.halong.myapplication.bean.County;
 import com.example.halong.myapplication.utils.WindowUtil;
-import com.example.halong.myapplication.viewmodel.MyViewModel;
 
 import java.util.List;
 
-public class ChooseCityActivity extends AppCompatActivity {
-
-    private MyViewModel myViewModel;
+public class ChooseCountyActivity extends AppCompatActivity {
     private ListView mList;
-    private List<City> mCities;
+    private List<County> mCounties;
     private MyAdapter myAdapter;
 
-    private TextView mTitle;
-    private Toolbar mToolbar;
+    private ChooseViewModel chooseViewModel;
 
     private int provinceId;
-    private String provinceName;
+    private int cityId;
+    private String cityName;
+    private TextView mTitle;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         WindowUtil.setStatusBarTransparent(this);
-        setContentView(R.layout.activity_choose_city);
+        setContentView(R.layout.activity_choose_county);
 
         initData();
         initView();
-
-
     }
 
     private void initData() {
         provinceId = getIntent().getIntExtra("province_id", 0);
-        provinceName = getIntent().getStringExtra("province_name");
+        cityId = getIntent().getIntExtra("city_id", 0);
+        cityName = getIntent().getStringExtra("city_name");
 
-        myViewModel = ViewModelProviders.of(this).get(MyViewModel.class);
-        myViewModel.requestCityData(provinceId);
-        myViewModel.getCityData().observe(this, new Observer<List<City>>() {
+        chooseViewModel = ViewModelProviders.of(this).get(ChooseViewModel.class);
+
+        chooseViewModel.getCountyData(cityId).observe(this, new Observer<List<County>>() {
             @Override
-            public void onChanged(@Nullable List<City> cities) {
-                mCities = cities;
-                myAdapter = new MyAdapter(mCities);
+            public void onChanged(@Nullable List<County> counties) {
+                if (counties == null || counties.size() < 1) {
+                    chooseViewModel.requestCountyData(provinceId, cityId);
+                }
+                mCounties = counties;
+                myAdapter = new MyAdapter(mCounties);
                 mList.setAdapter(myAdapter);
             }
         });
@@ -67,16 +70,17 @@ public class ChooseCityActivity extends AppCompatActivity {
         mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(ChooseCityActivity.this, ChooseCountyActivity.class);
-                intent.putExtra("province_id", provinceId);
-                intent.putExtra("city_id", mCities.get(position).getId());
-                intent.putExtra("city_name", mCities.get(position).getName());
+                String weatherId = mCounties.get(position).getWeather_id();
+                PreferenceManager.getDefaultSharedPreferences(ChooseCountyActivity.this).edit().putString("weatherId", weatherId).apply();
+
+                Intent intent = new Intent(ChooseCountyActivity.this, MainActivity.class);
+                intent.putExtra("weatherId",weatherId);
                 startActivity(intent);
             }
         });
 
         mTitle = (TextView) findViewById(R.id.title);
-        mTitle.setText(provinceName);
+        mTitle.setText(cityName);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mToolbar.setNavigationIcon(R.drawable.back);
@@ -87,6 +91,4 @@ public class ChooseCityActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }

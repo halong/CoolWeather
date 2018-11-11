@@ -1,44 +1,45 @@
-package com.example.halong.myapplication.viewmodel;
+package com.example.halong.myapplication.activity.choose;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.example.halong.myapplication.bean.City;
 import com.example.halong.myapplication.bean.County;
 import com.example.halong.myapplication.bean.Province;
+import com.example.halong.myapplication.database.MyDataBase;
 import com.example.halong.myapplication.network.NetUtil;
 
+import java.io.IOException;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MyViewModel extends AndroidViewModel {
-    private MutableLiveData<List<Province>> provinceData = new MutableLiveData<>();
-
-    private MutableLiveData<List<City>> cityData = new MutableLiveData<>();
-
-    private MutableLiveData<List<County>> countyData = new MutableLiveData<>();
-
-    public MyViewModel(@NonNull Application application) {
+public class ChooseViewModel extends AndroidViewModel {
+    public ChooseViewModel(@NonNull Application application) {
         super(application);
     }
 
-    public MutableLiveData<List<Province>> getProvinceData() {
-        return provinceData;
+
+    public LiveData<List<Province>> getProvinceData() {
+        return MyDataBase.getInstance(getApplication()).provinceDao().getAll();
     }
 
-    public MutableLiveData<List<City>> getCityData() {
-        return cityData;
+    public LiveData<List<City>> getCityData(int provinceId) {
+        return MyDataBase.getInstance(getApplication()).cityDao().getCitiesByProvinceId(provinceId);
     }
 
-    public MutableLiveData<List<County>> getCountyData() {
-        return countyData;
+    public LiveData<List<County>> getCountyData(int cityId) {
+        return MyDataBase.getInstance(getApplication()).countyDao().getCountiesByCityId(cityId);
     }
 
 
@@ -46,7 +47,10 @@ public class MyViewModel extends AndroidViewModel {
         NetUtil.getWeatherService().getProvinces().enqueue(new Callback<List<Province>>() {
             @Override
             public void onResponse(@NonNull Call<List<Province>> call, @NonNull Response<List<Province>> response) {
-                provinceData.postValue(response.body());
+                for (Province province :
+                        response.body()) {
+                    MyDataBase.getInstance(getApplication()).provinceDao().addItem(province);
+                }
             }
 
             @Override
@@ -57,11 +61,15 @@ public class MyViewModel extends AndroidViewModel {
     }
 
 
-    public void requestCityData(int province) {
+    public void requestCityData(final int province) {
         NetUtil.getWeatherService().getCities(province).enqueue(new Callback<List<City>>() {
             @Override
             public void onResponse(@NonNull Call<List<City>> call, @NonNull Response<List<City>> response) {
-                cityData.postValue(response.body());
+                for (City city :
+                        response.body()) {
+                    city.setProvinceId(province);
+                    MyDataBase.getInstance(getApplication()).cityDao().addItem(city);
+                }
             }
 
             @Override
@@ -71,11 +79,15 @@ public class MyViewModel extends AndroidViewModel {
         });
     }
 
-    public void requestCountyData(int province, int city) {
+    public void requestCountyData(int province, final int city) {
         NetUtil.getWeatherService().getCounties(province, city).enqueue(new Callback<List<County>>() {
             @Override
             public void onResponse(@NonNull Call<List<County>> call, @NonNull Response<List<County>> response) {
-                countyData.postValue(response.body());
+                for (County county :
+                        response.body()) {
+                    county.setCityId(city);
+                    MyDataBase.getInstance(getApplication()).countyDao().addItem(county);
+                }
             }
 
             @Override
@@ -84,6 +96,7 @@ public class MyViewModel extends AndroidViewModel {
             }
         });
     }
+
 
 
 }

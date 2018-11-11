@@ -5,7 +5,7 @@ import android.arch.persistence.room.PrimaryKey;
 
 
 @Entity(tableName = "counties")
-public class County  {
+public class County {
     /**
      * id : 1837
      * name : 昆明
@@ -16,6 +16,7 @@ public class County  {
     private int id;
     private String name;
     private String weather_id;
+    private int cityId;
 
     public int getId() {
         return id;
@@ -39,6 +40,14 @@ public class County  {
 
     public void setWeather_id(String weather_id) {
         this.weather_id = weather_id;
+    }
+
+    public int getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(int cityId) {
+        this.cityId = cityId;
     }
 
     @Override

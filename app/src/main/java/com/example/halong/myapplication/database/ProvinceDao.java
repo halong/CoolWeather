@@ -1,5 +1,6 @@
 package com.example.halong.myapplication.database;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -15,12 +16,13 @@ import java.util.List;
 @Dao
 public interface ProvinceDao {
     @Query("select * from provinces")
-    List<Province> getAll();
+    LiveData<List<Province>> getAll();
 
     @Query("select * from provinces where id = :id")
-    Province get(int id);
+    LiveData<Province> get(int id);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)  //对于id重复的item，后者replace前者
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+        //对于id重复的item，后者replace前者
     void addItem(Province... items);
 
     @Delete
